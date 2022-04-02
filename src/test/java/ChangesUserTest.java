@@ -4,6 +4,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import ru.yandex.praktikum.client.AuthClient;
 import ru.yandex.praktikum.model.User;
 import ru.yandex.praktikum.model.UserCredentials;
 
@@ -11,21 +12,19 @@ import static org.junit.Assert.assertEquals;
 
 public class ChangesUserTest {
 
-
     private Response responseRegister;
     private Response responseAuth;
     private Response responseGetInfoUser;
     private Response responseChangeInfoUser;
-    private Client client;
+    private AuthClient client;
     private User user;
     private User userWithEmailAndPassword = new User();
     private User userChanges = new User();
     private String accessToken;
 
-
     @Before
     public void setUp() {
-        client = new Client();
+        client = new AuthClient();
         user = User.getRandom();
         responseRegister = client.register(user);
 
@@ -48,8 +47,8 @@ public class ChangesUserTest {
         responseGetInfoUser = client.getInfoUser(accessToken);
         userChanges.setName(RandomStringUtils.randomAlphabetic(10));
         responseChangeInfoUser = client.change(userChanges, accessToken);
-        assertEquals("Error change name", userChanges.getName(), responseChangeInfoUser.path("user.name"));
         assertEquals("Incorrect status code", 200, responseChangeInfoUser.statusCode());
+        assertEquals("Error change name", userChanges.getName(), responseChangeInfoUser.path("user.name"));
 
     }
 
@@ -63,8 +62,8 @@ public class ChangesUserTest {
         responseGetInfoUser = client.getInfoUser(accessToken);
         userChanges.setPassword(RandomStringUtils.randomAlphabetic(10));
         responseChangeInfoUser = client.change(userChanges, accessToken);
-        assertEquals("Error change password", true, responseChangeInfoUser.path("success"));
         assertEquals("Incorrect status code", 200, responseChangeInfoUser.statusCode());
+        assertEquals("Error change password", true, responseChangeInfoUser.path("success"));
 
     }
 
@@ -78,8 +77,8 @@ public class ChangesUserTest {
         responseGetInfoUser = client.getInfoUser(accessToken);
         userChanges.setEmail(RandomStringUtils.randomAlphabetic(10) + "@" + RandomStringUtils.randomAlphabetic(10) + ".ru");
         responseChangeInfoUser = client.change(userChanges, accessToken);
-        assertEquals("Error change email", true, responseChangeInfoUser.path("success"));
         assertEquals("Incorrect status code", 200, responseChangeInfoUser.statusCode());
+        assertEquals("Error change email", true, responseChangeInfoUser.path("success"));
 
     }
 
@@ -89,8 +88,9 @@ public class ChangesUserTest {
         accessToken = responseRegister.path("accessToken");
         userChanges.setName(RandomStringUtils.randomAlphabetic(10));
         responseChangeInfoUser = client.change(userChanges, accessToken);
-        assertEquals("Error change name", userChanges.getName(), responseChangeInfoUser.path("user.name"));
         assertEquals("Incorrect status code", 200, responseChangeInfoUser.statusCode());
+        assertEquals("Error change name", userChanges.getName(), responseChangeInfoUser.path("user.name"));
+
     }
 
     @Test
@@ -99,8 +99,9 @@ public class ChangesUserTest {
         accessToken = responseRegister.path("accessToken");
         userChanges.setPassword(RandomStringUtils.randomAlphabetic(10));
         responseChangeInfoUser = client.change(userChanges, accessToken);
-        assertEquals("Error change password", true, responseChangeInfoUser.path("success"));
         assertEquals("Incorrect status code", 200, responseChangeInfoUser.statusCode());
+        assertEquals("Error change password", true, responseChangeInfoUser.path("success"));
+
     }
 
     @Test
@@ -110,8 +111,9 @@ public class ChangesUserTest {
         userChanges.setPassword(RandomStringUtils.randomAlphabetic(10));
         userChanges.setEmail(RandomStringUtils.randomAlphabetic(10) + "@" + RandomStringUtils.randomAlphabetic(10) + ".ru");
         responseChangeInfoUser = client.change(userChanges, accessToken);
-        assertEquals("Error change email", true, responseChangeInfoUser.path("success"));
         assertEquals("Incorrect status code", 200, responseChangeInfoUser.statusCode());
+        assertEquals("Error change email", true, responseChangeInfoUser.path("success"));
+
     }
 
     @Test
@@ -120,8 +122,9 @@ public class ChangesUserTest {
         accessToken = responseRegister.path("accessToken");
         userChanges.setName(RandomStringUtils.randomAlphabetic(10));
         responseChangeInfoUser = client.changeWithoutAuth(userChanges);
-        assertEquals("Unexpected error", false, responseChangeInfoUser.path("success"));
         assertEquals("Incorrect status code", 401, responseChangeInfoUser.statusCode());
+        assertEquals("Unexpected error", false, responseChangeInfoUser.path("success"));
+
     }
 
 }
